@@ -25,27 +25,37 @@ const Content = () => {
     localStorage.setItem('tasklist', JSON.stringify(listTasks));
   }
 
+  const handleDelete = (id) => {
+    const listTasks = tasks.filter((task) => task.id !== id);
+    setTasks(listTasks);
+    localStorage.setItem('tasklist', JSON.stringify(listTasks));
+  }
+
   return (
     <main>
-      <ul>
-        {tasks.map((task) => (
-          <li className='task' key={task.id}>
-            <input
-              type='checkbox'
-              onChange={() => handleCheck(task.id)}
-              checked={task.checked}
-            /> 
-            <label
-              style={(task.checked) ? {textDecoration: 'line-through'} : null}
-              onDoubleClick={() => handleCheck(task.id)}
-            >{task.task}</label>
-            <FaTrashAlt 
-              role='button' 
-              tabIndex='0' 
-            />
-          </li>
-        ))}
-      </ul>
+      { tasks.length ? (
+        <ul>
+          {tasks.map((task) => (
+            <li className='task' key={task.id}>
+              <input
+                type='checkbox'
+                onChange={() => handleCheck(task.id)}
+                checked={task.checked}
+              /> 
+              <label
+                style={(task.checked) ? {textDecoration: 'line-through'} : null}
+                onDoubleClick={() => handleCheck(task.id)}
+              >{task.task}</label>
+              <FaTrashAlt 
+                onClick={() => handleDelete(task.id)}
+                role='button' 
+                tabIndex='0' 
+              />
+            </li>
+          ))}
+        </ul> ) : (
+          <p style={{marginTop:'2rem'}}>Your list is empty.</p>
+        )}
     </main>
   )
 }
