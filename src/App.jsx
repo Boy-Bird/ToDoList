@@ -5,23 +5,7 @@ import Footer from './Footer'
 import { useState } from 'react';
 
 function App() {
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      checked: true,
-      task: "Study 7 hours"
-    },
-    {
-      id: 2,
-      checked: false,
-      task: "Practice DSA"
-    },
-    {
-      id: 3,
-      checked: false,
-      task: "Practice Guitar"
-    }
-  ]);
+  const [tasks, setTasks] = useState(JSON.parse(localStorage.getItem('tasklist')));
   const [newTask, setNewTask] = useState('');
 
   const setAndSaveTasks = (newTasks) => {
