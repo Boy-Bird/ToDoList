@@ -1,4 +1,5 @@
 import Header from './Header';
+import SearchTask from './SearchTask';
 import AddTask from './AddTask';
 import Content from './Content'
 import Footer from './Footer'
@@ -7,6 +8,7 @@ import { useState } from 'react';
 function App() {
   const [tasks, setTasks] = useState(JSON.parse(localStorage.getItem('tasklist')));
   const [newTask, setNewTask] = useState('');
+  const [search, setSearch] = useState('');
 
   const setAndSaveTasks = (newTasks) => {
     setTasks(newTasks);
@@ -45,8 +47,12 @@ function App() {
         setNewTask={setNewTask}
         handleSubmit={handleSubmit}
       />
+      <SearchTask
+        search={search}
+        setSearch={setSearch}
+      />
       <Content 
-        tasks={tasks}
+        tasks={tasks.filter(task => ((task.task).toLowerCase()).includes(search.toLowerCase()))}
         handleCheck={handleCheck}
         handleDelete={handleDelete}
       />
