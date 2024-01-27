@@ -1,0 +1,19 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "checked": false, 
+      "task": "Web D"
+    },
+    {
+      "id": 2, 
+      "checked": false,
+      "task": "DSA"
+    },
+    {
+      "id": 3,
+      "checked": false,
+      "task": "Learn Guitar"
+    }
+  ]
+}
