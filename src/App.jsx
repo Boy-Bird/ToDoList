@@ -4,6 +4,7 @@ import AddTask from './AddTask';
 import Content from './Content'
 import Footer from './Footer'
 import { useState, useEffect } from 'react';
+import apiRequest from './apiRequest';
 
 function App() {
   const API_URL = 'http://localhost:3500/tasks';
@@ -29,21 +30,48 @@ function App() {
     fetchTasks();
   }, [])
   
-  const addTask = (task) => {
+  const addTask = async (task) => {
     const id = tasks.length ? tasks[tasks.length - 1].id + 1 : 1;
     const myNewTask = { id, checked: false, task };
     const listTasks = [...tasks, myNewTask];
     setTasks(listTasks);
+
+    const postOptions = {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(myNewTask)
+    }
+    const result = await apiRequest(API_URL, postOptions);
+    if(result) setFetchError(result);
   }
 
-  const handleCheck = (id) => {
+  const handleCheck = async (id) => {
     const listTasks = tasks.map((task) => task.id === id ? { ...task, checked: !task.checked } : task);
     setTasks(listTasks);
+
+    const myTask = listTasks.filter((task) => task.id === id);
+    const updateOptions = {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ checked: myTask[0].checked})
+    };
+    const reqUrl = `${API_URL}/${id}`;
+    const result = await apiRequest(reqUrl, updateOptions);
+    if(result) setFetchError(result);
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const listTasks = tasks.filter((task) => task.id !== id);
     setTasks(listTasks);
+
+    const deleteOptions = { method: 'DELETE' };
+    const reqUrl = `${API_URL}/${id}`;
+    const result = await apiRequest(reqUrl, deleteOptions);
+    if(result) setFetchError(result);
   }
 
   const handleSubmit = (e) => {
