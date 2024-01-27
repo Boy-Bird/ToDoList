@@ -6,14 +6,28 @@ import Footer from './Footer'
 import { useState, useEffect } from 'react';
 
 function App() {
-  const [tasks, setTasks] = useState(JSON.parse(localStorage.getItem('tasklist')) || []);
+  const API_URL = 'http://localhost:3500/tasks';
+
+  const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
   const [search, setSearch] = useState('');
+  const [fetchError, setFetchError] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem('tasklist', JSON.stringify(tasks));
-    console.log('change')
-  }, [tasks])
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(API_URL);
+        if(!response.ok) throw Error('Did not receive expected data');
+        const listTasks = await response.json();
+        setTasks(listTasks);
+        setFetchError(null);
+      } catch (err) {
+        setFetchError(err.message);
+      }
+    }
+
+    fetchTasks();
+  }, [])
   
   const addTask = (task) => {
     const id = tasks.length ? tasks[tasks.length - 1].id + 1 : 1;
@@ -51,11 +65,14 @@ function App() {
         search={search}
         setSearch={setSearch}
       />
-      <Content 
-        tasks={tasks.filter(task => ((task.task).toLowerCase()).includes(search.toLowerCase()))}
-        handleCheck={handleCheck}
-        handleDelete={handleDelete}
-      />
+      <main>
+        {fetchError && <p style={{color: "red"}}>{`Error: ${fetchError}`}</p>}
+        {!fetchError && <Content 
+          tasks={tasks.filter(task => ((task.task).toLowerCase()).includes(search.toLowerCase()))}
+          handleCheck={handleCheck}
+          handleDelete={handleDelete}
+        />}
+      </main>
       <Footer length={tasks.length} />
     </div>   
   );

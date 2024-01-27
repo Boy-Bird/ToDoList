@@ -2,7 +2,7 @@ import TaskList from './TaskList';
 
 const Content = ({ tasks, handleCheck, handleDelete }) => {
   return (
-    <main>
+    <>
       { tasks.length ? (
         <TaskList 
           tasks={tasks}
@@ -12,7 +12,7 @@ const Content = ({ tasks, handleCheck, handleDelete }) => {
       ) : (
         <p style={{marginTop:'2rem'}}>Your list is empty.</p>
       )}
-    </main>
+    </>
   )
 }
 
